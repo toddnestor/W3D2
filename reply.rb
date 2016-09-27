@@ -1,6 +1,4 @@
-require_relative 'model'
-require_relative 'user'
-require_relative 'question'
+require_relative "requires"
 
 class Reply < Model
   attr_accessor :body, :parent, :user_id, :question_id

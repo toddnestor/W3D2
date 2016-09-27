@@ -1,6 +1,4 @@
-require_relative 'model'
-require_relative 'user'
-require_relative 'reply'
+require_relative "requires"
 
 class Question < Model
   attr_accessor :title, :body, :user_id
@@ -24,5 +22,9 @@ class Question < Model
 
   def replies
     Reply.new.find_by_question_id(@id)
+  end
+
+  def followers
+    Question.followers_for_question_id(@id)
   end
 end

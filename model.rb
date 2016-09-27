@@ -40,6 +40,10 @@ class Model
     QuestionsDatabase.instance.execute(*args)
   end
 
+  def self.execute(*args)
+    QuestionsDatabase.instance.execute(*args)
+  end
+
   # def find_by_id(id)
   #   data = execute(<<-SQL, id)
   #   SELECT

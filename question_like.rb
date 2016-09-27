@@ -1,4 +1,4 @@
-require_relative 'model'
+require_relative "requires"
 
 class QuestionLike < Model
   attr_accessor :question_id, :user_id

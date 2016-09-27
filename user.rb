@@ -1,6 +1,4 @@
-require_relative "model"
-require_relative 'question'
-require_relative 'reply'
+require_relative "requires"
 
 class User < Model
   attr_accessor :fname, :lname
@@ -19,5 +17,9 @@ class User < Model
 
   def authored_replies
     Reply.new.find_by_user_id(@id)
+  end
+
+  def followed_questions
+    Question.followed_questions_for_user_id(@id)
   end
 end

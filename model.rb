@@ -44,6 +44,67 @@ class Model
     QuestionsDatabase.instance.execute(*args)
   end
 
+  def save
+    columns = {}
+    self.instance_variables.each do |var|
+      columns[var[1..-1]] = self.instance_variable_get(var) unless var == :@id
+    end
+
+    if @id
+      update(columns)
+    else
+      insert(columns)
+    end
+  end
+
+  def insert(options = {})
+    sql = <<-SQL
+      INSERT INTO
+        #{self.class::TABLE} (#{options.keys.join(', ')})
+      VALUES
+        (#{options.keys.map{'?'}.join(', ')})
+    SQL
+
+    execute(sql, *options.values)
+
+    options['id'] = QuestionsDatabase.instance.last_insert_row_id
+    self.class.new(options)
+  end
+
+  def delete
+    raise unless @id
+
+    sql = <<-SQL
+      DELETE FROM #{self.class::TABLE}
+      WHERE id = ?
+    SQL
+
+    execute(sql, @id)
+  end
+
+  def update(options)
+    array = []
+    options.keys.each do |key|
+      array << "#{key} = ?"
+    end
+
+    sql = <<-SQL
+      UPDATE
+        #{self.class::TABLE}
+      SET
+        #{array.join(", ")}
+      WHERE
+        id = ?
+    SQL
+
+    values = options.values + [@id]
+
+    execute(sql, *values)
+
+    options['id'] = @id
+    self.class.new(options)
+  end
+
   # def find_by_id(id)
   #   data = execute(<<-SQL, id)
   #   SELECT

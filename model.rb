@@ -56,7 +56,7 @@ class Model
 
     SQL
 
-    data.map { |el| self.class.new(el) }
+    data.map { |el| self.new(el) }
   end
 
   def execute(*args)
@@ -127,17 +127,4 @@ class Model
     options['id'] = @id
     self.class.new(options)
   end
-
-  # def find_by_id(id)
-  #   data = execute(<<-SQL, id)
-  #   SELECT
-  #     *
-  #   FROM
-  #     #{self.class::TABLE}
-  #   WHERE
-  #     id = ?
-  #   SQL
-  #
-  #   self.class.new(data.first)
-  # end
 end

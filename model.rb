@@ -70,7 +70,7 @@ class Model
   def save
     columns = {}
     self.instance_variables.each do |var|
-      columns[var[1..-1]] = self.instance_variable_get(var) unless var == :@id
+      columns[var[1..-1]] = self.instance_variable_get(var) unless var == :@id || self.instance_variable_get(var).nil?
     end
 
     if @id

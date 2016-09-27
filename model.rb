@@ -7,21 +7,44 @@ class Model
     method_name = method.to_s
 
     if method_name.start_with?('find_by_')
-      column = method_name[8..-1]
+      options = []
+      columns = method_name[8..-1].split("_and_")
 
-      data = execute(<<-SQL, args[0])
+      columns.each_with_index do |column, i|
+          options << { :col => column, :val => args[i] }
+      end
+
+      where(options)
+    else
+      super
+    end
+  end
+
+  def where(options)
+    where = []
+    values = []
+
+    options.each do |option|
+      values << option[:val]
+      col = option[:col]
+
+      comparator = option[:comparator]
+      comparator ||= "="
+
+      where << "#{col} #{comparator} ?"
+    end
+
+    sql = <<-SQL
       SELECT
         *
       FROM
         #{self.class::TABLE}
       WHERE
-        #{column} = ?
-      SQL
+        #{where.join(' AND ')}
+    SQL
 
-      data.map { |el| self.class.new(el) }
-    else
-      super
-    end
+    data = execute(sql, *values)
+    data.map { |el| self.class.new(el) }
   end
 
   def all

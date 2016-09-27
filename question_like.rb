@@ -59,4 +59,24 @@ class QuestionLike < Model
     data = Model.execute(sql, id)
     data.map { |el| Question.new(el) }
   end
+
+  def self.most_liked_questions(n = 5)
+    sql = <<-SQL
+      SELECT
+        questions.*
+      FROM
+        questions
+        LEFT JOIN question_likes
+          ON question_likes.question_id = questions.id
+      GROUP BY
+        questions.id
+      ORDER BY
+        COUNT(question_likes.user_id) DESC
+      LIMIT
+        ?
+    SQL
+
+    data = Model.execute(sql, n)
+    data.map { |el| Question.new(el) }
+  end
 end

@@ -31,4 +31,16 @@ class Question < Model
   def most_followed(n = 5)
     QuestionFollow.most_followed_questions(n)
   end
+
+  def most_followed(n = 5)
+    QuestionLike.most_liked_questions(n)
+  end
+
+  def likers
+    QuestionLike.likers_for_question_id(@id)
+  end
+
+  def num_likes
+    QuestionLike.num_likes_for_question_id(@id)
+  end
 end

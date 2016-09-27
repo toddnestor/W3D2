@@ -22,4 +22,34 @@ class User < Model
   def followed_questions
     Question.followed_questions_for_user_id(@id)
   end
+
+  def liked_questions
+    QuestionLike.liked_questions_for_user_id(@id)
+  end
+
+  def average_karma
+    sql = <<-SQL
+    SELECT
+      (SUM(inner_questions.likes) / CAST( COUNT(inner_questions.id) AS FLOAT)) AS karma
+    FROM
+      questions
+      LEFT JOIN (
+        SELECT
+          questions.*, COUNT(question_likes.user_id) AS likes
+        FROM
+          questions
+          LEFT JOIN question_likes
+            ON question_likes.question_id = questions.id
+        WHERE
+          questions.user_id = ?
+        GROUP BY
+          questions.id
+        ) AS inner_questions ON questions.id = inner_questions.id
+    SQL
+
+    data = execute(sql, @id)
+
+    return data.first['karma'] if data.first['karma']
+    0
+  end
 end

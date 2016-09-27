@@ -27,4 +27,8 @@ class Question < Model
   def followers
     Question.followers_for_question_id(@id)
   end
+
+  def most_followed(n = 5)
+    QuestionFollow.most_followed_questions(n)
+  end
 end

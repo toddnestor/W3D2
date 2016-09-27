@@ -24,7 +24,7 @@ class QuestionFollow < Model
     SQL
 
     data = Model.execute(sql, id)
-    data.map {|el| User.new(el)}
+    data.map { |el| User.new(el) }
   end
 
   def self.followed_questions_for_user_id(id)
@@ -40,6 +40,26 @@ class QuestionFollow < Model
     SQL
 
     data = Model.execute(sql, id)
-    data.map {|el| Question.new(el)}
+    data.map { |el| Question.new(el) }
+  end
+
+  def self.most_followed_questions(n = 5)
+    sql = <<-SQL
+      SELECT
+        questions.*
+      FROM
+        questions
+        LEFT JOIN question_follows
+          ON question_follows.question_id = questions.id
+      GROUP BY
+        questions.id
+      ORDER BY
+        COUNT(question_follows.user_id) DESC
+      LIMIT
+        ?
+    SQL
+
+    data = Model.execute(sql, n)
+    data.map { |el| Question.new(el) }
   end
 end

@@ -12,11 +12,11 @@ class User < Model
   end
 
   def authored_questions
-    Question.new.find_by_author_id(@id)
+    Question.find_by_author_id(@id)
   end
 
   def authored_replies
-    Reply.new.find_by_user_id(@id)
+    Reply.find_by_user_id(@id)
   end
 
   def followed_questions

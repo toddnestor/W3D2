@@ -17,11 +17,11 @@ class Question < Model
   end
 
   def author
-    User.new.find_by_id(@user_id).first
+    User.find_by_id(@user_id).first
   end
 
   def replies
-    Reply.new.find_by_question_id(@id)
+    Reply.find_by_question_id(@id)
   end
 
   def followers

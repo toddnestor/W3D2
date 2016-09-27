@@ -14,20 +14,20 @@ class Reply < Model
   end
 
   def author
-    User.new.find_by_id(@user_id).first
+    User.find_by_id(@user_id).first
   end
 
   def question
-    Question.new.find_by_id(@question_id).first
+    Question.find_by_id(@question_id).first
   end
 
   def parent_reply
     return nil unless @parent
-    Reply.new.find_by_id(@parent).first
+    Reply.find_by_id(@parent).first
   end
 
   def child_replies
-    Reply.new.find_by_parent(@id)
+    Reply.find_by_parent(@id)
   end
 
 end

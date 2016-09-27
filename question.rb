@@ -12,8 +12,8 @@ class Question < Model
     @user_id = options['user_id']
   end
 
-  def find_by_author_id(id)
-    find_by_user_id(id)
+  def self.find_by_author_id(id)
+    self.find_by_user_id(id)
   end
 
   def author

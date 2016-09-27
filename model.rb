@@ -3,7 +3,7 @@ require_relative 'questions_database'
 class Model
   attr_reader :id
 
-  def method_missing(method, *args)
+  def self.method_missing(method, *args)
     method_name = method.to_s
 
     if method_name.start_with?('find_by_')
@@ -20,7 +20,7 @@ class Model
     end
   end
 
-  def where(options)
+  def self.where(options)
     where = []
     values = []
 
@@ -38,21 +38,21 @@ class Model
       SELECT
         *
       FROM
-        #{self.class::TABLE}
+        #{self::TABLE}
       WHERE
         #{where.join(' AND ')}
     SQL
 
     data = execute(sql, *values)
-    data.map { |el| self.class.new(el) }
+    data.map { |el| self.new(el) }
   end
 
-  def all
+  def self.all
     data = execute(<<-SQL)
     SELECT
       *
     FROM
-      #{self.class::TABLE}
+      #{self::TABLE}
 
     SQL
 
